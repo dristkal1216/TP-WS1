@@ -1,0 +1,47 @@
+﻿@model IEnumerable<TP_WS1.Models.Game>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.User)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @if(item.UserId != null)
+                    {
+                        @item.UserId.ToString().Count();
+                        
+                    }
+                    else
+                    {
+						<span>Nouveau genre de jeu !!! </span>
+                    };
+                </td>
+            <td>
+                <a asp-controller="Posts" asp-action="Index" asp-route-id="@item.GameId">Voir Publication</a> |
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

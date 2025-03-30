@@ -15,5 +15,13 @@ public partial class Game
 
     public string GameEngine { get; set; } = null!;
 
-    public string? UserId { get; set; }
+    public int? UserId { get; set; }
+
+    public bool IsArchived { get; set; }
+
+    public virtual GameGenre GameGenre { get; set; } = null!;
+
+    public virtual ICollection<Post> Posts { get; set; } = new List<Post>();
+
+    public virtual User? User { get; set; }
 }
