@@ -15,9 +15,13 @@ public partial class Game
 
     public string GameEngine { get; set; } = null!;
 
-    public int? UserId { get; set; }
+    public string? UserId { get; set; }
 
     public bool IsArchived { get; set; }
+
+    public DateTime? UpdatedAt { get; set; }
+
+    public DateTime? CreatedAt { get; set; }
 
     public virtual GameGenre GameGenre { get; set; } = null!;
 

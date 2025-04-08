@@ -1,8 +1,34 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@* @using TP_WS1.ViewModels *@
+@model IEnumerable<TP_WS1.ViewModels.GGenreGame>
+
+@{
+    ViewData["Title"] = "Index";
 }
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <section>
+        <h2>Catégorie Populaire</h2>
+		@if (Model == null || !Model.Any())
+		{
+			<p>Aucune catégorie trouvée.</p>
+		}
+		else
+		{
+			<div class="flex-row flex justify-content-between">
+				@foreach (var item in Model)
+				{
+					<div class="w-25 h-25 border-2-black ">
+						@Html.DisplayFor(m => item.fullName)
+					</div>
+
+				}
+			</div>
+				
+			
+		}
+
+        
+    </section>
 </div>

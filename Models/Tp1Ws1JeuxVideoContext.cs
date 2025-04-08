@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using TP_WS1.ViewModels;
 
 namespace TP_WS1.Models;
 
@@ -15,7 +16,17 @@ public partial class Tp1Ws1JeuxVideoContext : DbContext
     {
     }
 
-    public virtual DbSet<EnumRole> EnumRoles { get; set; }
+    public virtual DbSet<AspNetRole> AspNetRoles { get; set; }
+
+    public virtual DbSet<AspNetRoleClaim> AspNetRoleClaims { get; set; }
+
+    public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
+
+    public virtual DbSet<AspNetUserClaim> AspNetUserClaims { get; set; }
+
+    public virtual DbSet<AspNetUserLogin> AspNetUserLogins { get; set; }
+
+    public virtual DbSet<AspNetUserToken> AspNetUserTokens { get; set; }
 
     public virtual DbSet<Game> Games { get; set; }
 
@@ -30,15 +41,81 @@ public partial class Tp1Ws1JeuxVideoContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<EnumRole>(entity =>
+        modelBuilder.Entity<AspNetRole>(entity =>
         {
-            entity.ToTable("Enum Role");
+            entity.HasIndex(e => e.NormalizedName, "RoleNameIndex")
+                .IsUnique()
+                .HasFilter("([NormalizedName] IS NOT NULL)");
 
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Role)
-                .HasMaxLength(10)
-                .IsFixedLength()
-                .HasColumnName("role");
+            entity.Property(e => e.Name).HasMaxLength(256);
+            entity.Property(e => e.NormalizedName).HasMaxLength(256);
+        });
+
+        modelBuilder.Entity<AspNetRoleClaim>(entity =>
+        {
+            entity.HasIndex(e => e.RoleId, "IX_AspNetRoleClaims_RoleId");
+
+            entity.HasOne(d => d.Role).WithMany(p => p.AspNetRoleClaims).HasForeignKey(d => d.RoleId);
+        });
+
+        modelBuilder.Entity<AspNetUser>(entity =>
+        {
+            entity.HasIndex(e => e.NormalizedEmail, "EmailIndex");
+
+            entity.HasIndex(e => e.NormalizedUserName, "UserNameIndex")
+                .IsUnique()
+                .HasFilter("([NormalizedUserName] IS NOT NULL)");
+
+            entity.Property(e => e.Email).HasMaxLength(256);
+            entity.Property(e => e.NormalizedEmail).HasMaxLength(256);
+            entity.Property(e => e.NormalizedUserName).HasMaxLength(256);
+            entity.Property(e => e.UserName).HasMaxLength(256);
+
+            entity.HasOne(d => d.IdNavigation).WithOne(p => p.AspNetUser)
+                .HasForeignKey<AspNetUser>(d => d.Id)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_AspNetUsers_users");
+
+            entity.HasMany(d => d.Roles).WithMany(p => p.Users)
+                .UsingEntity<Dictionary<string, object>>(
+                    "AspNetUserRole",
+                    r => r.HasOne<AspNetRole>().WithMany().HasForeignKey("RoleId"),
+                    l => l.HasOne<AspNetUser>().WithMany().HasForeignKey("UserId"),
+                    j =>
+                    {
+                        j.HasKey("UserId", "RoleId");
+                        j.ToTable("AspNetUserRoles");
+                        j.HasIndex(new[] { "RoleId" }, "IX_AspNetUserRoles_RoleId");
+                    });
+        });
+
+        modelBuilder.Entity<AspNetUserClaim>(entity =>
+        {
+            entity.HasIndex(e => e.UserId, "IX_AspNetUserClaims_UserId");
+
+            entity.HasOne(d => d.User).WithMany(p => p.AspNetUserClaims).HasForeignKey(d => d.UserId);
+        });
+
+        modelBuilder.Entity<AspNetUserLogin>(entity =>
+        {
+            entity.HasKey(e => new { e.LoginProvider, e.ProviderKey });
+
+            entity.HasIndex(e => e.UserId, "IX_AspNetUserLogins_UserId");
+
+            entity.Property(e => e.LoginProvider).HasMaxLength(128);
+            entity.Property(e => e.ProviderKey).HasMaxLength(128);
+
+            entity.HasOne(d => d.User).WithMany(p => p.AspNetUserLogins).HasForeignKey(d => d.UserId);
+        });
+
+        modelBuilder.Entity<AspNetUserToken>(entity =>
+        {
+            entity.HasKey(e => new { e.UserId, e.LoginProvider, e.Name });
+
+            entity.Property(e => e.LoginProvider).HasMaxLength(128);
+            entity.Property(e => e.Name).HasMaxLength(128);
+
+            entity.HasOne(d => d.User).WithMany(p => p.AspNetUserTokens).HasForeignKey(d => d.UserId);
         });
 
         modelBuilder.Entity<Game>(entity =>
@@ -46,6 +123,9 @@ public partial class Tp1Ws1JeuxVideoContext : DbContext
             entity.ToTable("Game");
 
             entity.Property(e => e.GameId).HasColumnName("Game_id");
+            entity.Property(e => e.CreatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("createdAt");
             entity.Property(e => e.GameEngine)
                 .HasMaxLength(25)
                 .HasColumnName("game_engine");
@@ -57,7 +137,12 @@ public partial class Tp1Ws1JeuxVideoContext : DbContext
             entity.Property(e => e.Name)
                 .HasMaxLength(25)
                 .HasColumnName("name");
-            entity.Property(e => e.UserId).HasColumnName("user_id");
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("updatedAt");
+            entity.Property(e => e.UserId)
+                .HasMaxLength(450)
+                .HasColumnName("user_id");
 
             entity.HasOne(d => d.GameGenre).WithMany(p => p.Games)
                 .HasForeignKey(d => d.GameGenreId)
@@ -79,7 +164,6 @@ public partial class Tp1Ws1JeuxVideoContext : DbContext
             entity.Property(e => e.FullName)
                 .HasMaxLength(50)
                 .HasColumnName("fullName");
-            entity.Property(e => e.GameTypeId).HasColumnName("game_type_id");
             entity.Property(e => e.IsArchived).HasColumnName("isArchived");
         });
 
@@ -88,6 +172,9 @@ public partial class Tp1Ws1JeuxVideoContext : DbContext
             entity.ToTable("Post");
 
             entity.Property(e => e.PostId).HasColumnName("Post_id");
+            entity.Property(e => e.CreatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("createdAt");
             entity.Property(e => e.GameId).HasColumnName("Game_id");
             entity.Property(e => e.IsArchived).HasColumnName("isArchived");
             entity.Property(e => e.Message)
@@ -97,7 +184,12 @@ public partial class Tp1Ws1JeuxVideoContext : DbContext
             entity.Property(e => e.Title)
                 .HasMaxLength(75)
                 .HasColumnName("title");
-            entity.Property(e => e.UserId).HasColumnName("user_id");
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("updatedAt");
+            entity.Property(e => e.UserId)
+                .HasMaxLength(450)
+                .HasColumnName("user_id");
 
             entity.HasOne(d => d.Game).WithMany(p => p.Posts)
                 .HasForeignKey(d => d.GameId)
@@ -112,31 +204,23 @@ public partial class Tp1Ws1JeuxVideoContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.UserId).HasName("PK__users__CB9A1CFF4B730E53");
+            entity.HasKey(e => e.Id).HasName("PK__users__CB9A1CFF4B730E53");
 
             entity.ToTable("users");
 
-            entity.Property(e => e.UserId).HasColumnName("user_id");
-            entity.Property(e => e.Email)
-                .HasMaxLength(50)
-                .HasColumnName("email");
-            entity.Property(e => e.Password)
-                .HasMaxLength(20)
-                .HasColumnName("password");
+            entity.Property(e => e.LastActivity)
+                .HasColumnType("datetime")
+                .HasColumnName("lastActivity");
             entity.Property(e => e.PostId).HasColumnName("post_id");
-            entity.Property(e => e.Role).HasColumnName("role");
             entity.Property(e => e.Username)
                 .HasMaxLength(50)
                 .HasColumnName("username");
-
-            entity.HasOne(d => d.RoleNavigation).WithMany(p => p.Users)
-                .HasForeignKey(d => d.Role)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_users_Enum Role");
         });
 
         OnModelCreatingPartial(modelBuilder);
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+public DbSet<GGenreGame> GGenreGame { get; set; } = default!;
 }

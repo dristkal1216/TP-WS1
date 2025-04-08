@@ -11,11 +11,15 @@ public partial class Post
 
     public string Message { get; set; } = null!;
 
-    public int UserId { get; set; }
+    public string UserId { get; set; } = null!;
 
     public int GameId { get; set; }
 
     public int? ReactionId { get; set; }
+
+    public DateTime? UpdatedAt { get; set; }
+
+    public DateTime? CreatedAt { get; set; }
 
     public bool IsArchived { get; set; }
 
