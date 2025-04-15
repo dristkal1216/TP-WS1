@@ -29,29 +29,29 @@ namespace TP_WS1.Controllers
                 var result =  _context.Posts.Where(p => p.GameId == id).Select(gp => new GamePost
                 {
                     GameName = gp.Game.Name,
-                    nbPost = gp.Game.Posts.Count(),
-                    nbVue = gp.Click,
+                    NbPost = gp.Game.Posts.Count(),
+                    NbVue = gp.Click ,
                     author = gp.UserId,
                     lastUserActivity = gp.User.Username,
                     CreatedAt = gp.CreatedAt,
                     UpdateAt = gp.UpdatedAt,
                 });
 
-                return View(await result.ToListAsync());
+                return View(result);
             }
             else
             {
                 var result = _context.Posts.Select(gp => new GamePost
                 {
                     GameName = gp.Game.Name,
-                    nbPost = gp.Game.Posts.Count(),
-                    nbVue = gp.Click,
+                    NbPost = gp.Game.Posts.Count(),
+                    NbVue = gp.Click,
                     author = gp.UserId,
                     lastUserActivity = gp.User.Username,
                     CreatedAt = gp.CreatedAt,
                     UpdateAt = gp.UpdatedAt,
                 }); ;
-                return View(await result.ToListAsync());
+                return View(result);
             }
             ;
         }

@@ -28,7 +28,7 @@
 								@foreach (var sujet in item.Top3Games)
 								{
 									<il class="list-group-item d-flex flex-row">
-										<a class="card-link fw-bold w-100 row-cols-1" asp-area="" asp-controller="Games" asp-action="Index" asp-route-id=@sujet.Name>@Html.DisplayFor(m => sujet.GameId)</a>
+										<a class="card-link fw-bold w-100 row-cols-1" asp-area="" asp-controller="Games" asp-action="Index" asp-route-id=@sujet.GameId>@Html.DisplayFor(m => sujet.Name)</a>
 									<h6 class="card-text w-50 row-cols-2">Last modified :@Html.DisplayFor(m => sujet.UpdatedAt)</h6>
 									<h6 class="card-text w-50 row-cols-2">Created at :@Html.DisplayFor(m => sujet.CreatedAt)</h6>
 									</il>

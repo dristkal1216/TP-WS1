@@ -4,12 +4,12 @@ using TP_WS1.Models;
 
 namespace TP_WS1.ViewModels
 {
-    internal class GamePost
+    public class GamePost
     {
         [Key, Column(Order = 0)]
         public string GameName { get; set; }
-        public int nbPost { get; set; }
-        public object nbVue { get; set; }
+        public int? NbPost { get; set; }
+        public int? NbVue { get; set; }
         public string author { get; set; }
         public string lastUserActivity { get; set; }
         public DateTime? CreatedAt { get; set; }
