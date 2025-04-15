@@ -19,11 +19,23 @@ namespace TP_WS1.Controllers
         }
 
         // GET: GameGenres
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? id)
         {
-            var GameGenres = await _context.GameGenres.Include(g => g.Games).ToListAsync();
+            var Gamegenres = _context.GameGenres;
 
-            return View(GameGenres);
+            if (id != null)
+            {
+                await Gamegenres.Include(g => g.Games)
+                      .Where(g => g.GameGenreId == id.ToString())
+                      .ToListAsync();
+            }
+            else
+            {
+                await Gamegenres.Include(g => g.Games).ToListAsync();
+            }
+
+
+            return View(Gamegenres);
         }
 
         // GET: GameGenres/Details/5
@@ -55,7 +67,7 @@ namespace TP_WS1.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("GameGenreId,FullName,GameTypeId,IsArchived")] GameGenre gameGenre)
+        public async Task<IActionResult> Create([Bind("GameGenreId,FullName,IsArchived")] GameGenre gameGenre)
         {
             if (ModelState.IsValid)
             {
@@ -87,7 +99,7 @@ namespace TP_WS1.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("GameGenreId,FullName,GameTypeId,IsArchived")] GameGenre gameGenre)
+        public async Task<IActionResult> Edit(string id, [Bind("GameGenreId,FullName,IsArchived")] GameGenre gameGenre)
         {
             if (id != gameGenre.GameGenreId)
             {

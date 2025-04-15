@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -23,13 +24,18 @@ namespace TP_WS1.Controllers
         {
             if (id != null)
             {
-                var tp1Ws1JeuxVideoContext = _context.Games.Include(g => g.GameGenre).Include(g => g.User).Where(g => g.GameGenreId == id && g.IsArchived == false);
+                id = WebUtility.UrlDecode(id);
+
+                var tp1Ws1JeuxVideoContext = _context.Games.Include(g => g.GameGenre).Include(g => g.User).Include(p=> p.Posts.Count()).Where(g => g.Name == id);
+                Console.WriteLine("id : " + tp1Ws1JeuxVideoContext);
                 return View(await tp1Ws1JeuxVideoContext.ToListAsync());
-            } else
+            }
+            else
             {
                 var tp1Ws1JeuxVideoContext = _context.Games.Include(g => g.GameGenre).Include(g => g.User).Where(g => g.IsArchived == false);
                 return View(await tp1Ws1JeuxVideoContext.ToListAsync());
-            };
+            }
+            ;
         }
 
         // GET: Games/Details/5
@@ -56,7 +62,7 @@ namespace TP_WS1.Controllers
         public IActionResult Create()
         {
             ViewData["GameGenreId"] = new SelectList(_context.GameGenres, "GameGenreId", "GameGenreId");
-            ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId");
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
             return View();
         }
 
@@ -65,7 +71,7 @@ namespace TP_WS1.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("GameId,Name,GameGenreId,IsOnline,GameEngine,UserId,IsArchived")] Game game)
+        public async Task<IActionResult> Create([Bind("GameId,Name,GameGenreId,IsOnline,GameEngine,UserId,IsArchived,UpdatedAt,CreatedAt")] Game game)
         {
             if (ModelState.IsValid)
             {
@@ -74,7 +80,7 @@ namespace TP_WS1.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["GameGenreId"] = new SelectList(_context.GameGenres, "GameGenreId", "GameGenreId", game.GameGenreId);
-            ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId", game.UserId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", game.UserId);
             return View(game);
         }
 
@@ -92,7 +98,7 @@ namespace TP_WS1.Controllers
                 return NotFound();
             }
             ViewData["GameGenreId"] = new SelectList(_context.GameGenres, "GameGenreId", "GameGenreId", game.GameGenreId);
-            ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId", game.UserId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", game.UserId);
             return View(game);
         }
 
@@ -101,7 +107,7 @@ namespace TP_WS1.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("GameId,Name,GameGenreId,IsOnline,GameEngine,UserId,IsArchived")] Game game)
+        public async Task<IActionResult> Edit(int id, [Bind("GameId,Name,GameGenreId,IsOnline,GameEngine,UserId,IsArchived,UpdatedAt,CreatedAt")] Game game)
         {
             if (id != game.GameId)
             {
@@ -129,7 +135,7 @@ namespace TP_WS1.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["GameGenreId"] = new SelectList(_context.GameGenres, "GameGenreId", "GameGenreId", game.GameGenreId);
-            ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId", game.UserId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", game.UserId);
             return View(game);
         }
 

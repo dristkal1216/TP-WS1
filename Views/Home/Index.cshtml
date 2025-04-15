@@ -9,19 +9,36 @@
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
     <section>
-        <h2>Catégorie Populaire</h2>
+        <h2>What's Poppin'</h2>
 		@if (Model == null || !Model.Any())
 		{
 			<p>Aucune catégorie trouvée.</p>
 		}
 		else
 		{
-			<div class="flex-row flex justify-content-between">
+			<div class="container d-flex flex-sm-wrap">
 				@foreach (var item in Model)
 				{
-					<div class="w-25 h-25 border-2-black ">
-						@Html.DisplayFor(m => item.fullName)
-					</div>
+					
+						<div class="card col-6">
+							<div class="card-body">
+								<h5 class="card-title">@Html.DisplayFor(m => item.fullName)</h5>
+							</div>
+							<ul class="list-group list-group-flush">
+								@foreach (var sujet in item.Top3Games)
+								{
+									<il class="list-group-item d-flex flex-row">
+										<a class="card-link fw-bold w-100 row-cols-1" asp-area="" asp-controller="Games" asp-action="Index" asp-route-id=@sujet.Name>@Html.DisplayFor(m => sujet.Name)</a>
+									<h6 class="card-text w-50 row-cols-2">Last modified :@Html.DisplayFor(m => sujet.UpdatedAt)</h6>
+									<h6 class="card-text w-50 row-cols-2">Created at :@Html.DisplayFor(m => sujet.CreatedAt)</h6>
+									</il>
+								}
+							</ul>
+							<div class="card-body">
+								<a class="card-link" asp-area="" asp-controller="GameGenres" asp-action="Index" asp-route-id=@Html.DisplayFor(m=> item.fullName)>Voir Categorie</a>
+							</div>
+						</div>
+					
 
 				}
 			</div>
