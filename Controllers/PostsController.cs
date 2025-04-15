@@ -2,10 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-<<<<<<< HEAD
 using Microsoft.AspNetCore.Authorization;
-=======
->>>>>>> main
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,10 +10,7 @@ using TP_WS1.Models;
 
 namespace TP_WS1.Controllers
 {
-<<<<<<< HEAD
     [Authorize]
-=======
->>>>>>> main
     public class PostsController : Controller
     {
         private readonly Tp1Ws1JeuxVideoContext _context;
@@ -25,14 +19,11 @@ namespace TP_WS1.Controllers
         {
             _context = context;
         }
-
-        // GET: Posts
-<<<<<<< HEAD
         public async Task<IActionResult> Index()
         {
             var tp1Ws1JeuxVideoContext = _context.Posts.Include(p => p.Game).Include(p => p.User);
-            return View(await tp1Ws1JeuxVideoContext.ToListAsync());
-=======
+            return View(await tp1Ws1JeuxVideoContext.ToListAsync()); 
+        }
         public async Task<IActionResult> Index(int? id)
         {
             if(id != null)
@@ -46,7 +37,6 @@ namespace TP_WS1.Controllers
             }
 
                
->>>>>>> main
         }
 
         // GET: Posts/Details/5

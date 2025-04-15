@@ -17,20 +17,14 @@ public partial class Post
 
     public int? ReactionId { get; set; }
 
-<<<<<<< HEAD
-=======
     public DateTime? UpdatedAt { get; set; }
 
     public DateTime? CreatedAt { get; set; }
 
->>>>>>> main
     public bool IsArchived { get; set; }
 
     public virtual Game Game { get; set; } = null!;
 
-<<<<<<< HEAD
-    public virtual AspNetUser User { get; set; } = null!;
-=======
-    public virtual User User { get; set; } = null!;
->>>>>>> main
+    public virtual AspNetUser? User { get; set; } = null!;
+   
 }

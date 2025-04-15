@@ -71,14 +71,13 @@ public partial class Tp1Ws1JeuxVideoContext : DbContext
             entity.Property(e => e.NormalizedUserName).HasMaxLength(256);
             entity.Property(e => e.UserName).HasMaxLength(256);
 
-<<<<<<< HEAD
-=======
+
             entity.HasOne(d => d.IdNavigation).WithOne(p => p.AspNetUser)
                 .HasForeignKey<AspNetUser>(d => d.Id)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_AspNetUsers_users");
 
->>>>>>> main
+
             entity.HasMany(d => d.Roles).WithMany(p => p.Users)
                 .UsingEntity<Dictionary<string, object>>(
                     "AspNetUserRole",
@@ -154,11 +153,8 @@ public partial class Tp1Ws1JeuxVideoContext : DbContext
 
             entity.HasOne(d => d.User).WithMany(p => p.Games)
                 .HasForeignKey(d => d.UserId)
-<<<<<<< HEAD
+
                 .HasConstraintName("FK_Game_AspNetUsers");
-=======
-                .HasConstraintName("FK_Game_users");
->>>>>>> main
         });
 
         modelBuilder.Entity<GameGenre>(entity =>
@@ -178,16 +174,16 @@ public partial class Tp1Ws1JeuxVideoContext : DbContext
         {
             entity.ToTable("Post");
 
-<<<<<<< HEAD
+
             entity.Property(e => e.PostId)
                 .ValueGeneratedNever()
                 .HasColumnName("Post_id");
-=======
+
             entity.Property(e => e.PostId).HasColumnName("Post_id");
             entity.Property(e => e.CreatedAt)
                 .HasColumnType("datetime")
                 .HasColumnName("createdAt");
->>>>>>> main
+
             entity.Property(e => e.GameId).HasColumnName("Game_id");
             entity.Property(e => e.IsArchived).HasColumnName("isArchived");
             entity.Property(e => e.Message)
@@ -212,11 +208,8 @@ public partial class Tp1Ws1JeuxVideoContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.Posts)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-<<<<<<< HEAD
+
                 .HasConstraintName("FK_Post_AspNetUsers");
-=======
-                .HasConstraintName("FK_Post_users1");
->>>>>>> main
         });
 
         modelBuilder.Entity<User>(entity =>

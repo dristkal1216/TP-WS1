@@ -19,10 +19,9 @@ namespace TP_WS1.Controllers
 
         public IActionResult Index()
         {
-<<<<<<< HEAD
 
-            return View(_context.GameGenres.ToList());
-=======
+           
+
             var results = _context.GameGenres.Select(g => new GGenreGame
             {
                 fullName = g.GameGenreId,
@@ -33,7 +32,6 @@ namespace TP_WS1.Controllers
             });
 
             return View(results);
->>>>>>> main
         }
 
         public IActionResult Privacy()

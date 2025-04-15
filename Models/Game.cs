@@ -27,9 +27,9 @@ public partial class Game
 
     public virtual ICollection<Post> Posts { get; set; } = new List<Post>();
 
-<<<<<<< HEAD
+
     public virtual AspNetUser? User { get; set; }
-=======
-    public virtual User? User { get; set; }
->>>>>>> main
+
+
+
 }

@@ -12,13 +12,10 @@ public partial class User
     public int PostId { get; set; }
 
     public DateTime? LastActivity { get; set; }
-<<<<<<< HEAD
-=======
 
     public virtual AspNetUser? AspNetUser { get; set; }
 
     public virtual ICollection<Game> Games { get; set; } = new List<Game>();
 
     public virtual ICollection<Post> Posts { get; set; } = new List<Post>();
->>>>>>> main
 }
