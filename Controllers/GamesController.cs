@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TP_WS1.Models;
+using TP_WS1.ViewModels;
 
 namespace TP_WS1.Controllers
 {
@@ -20,20 +21,37 @@ namespace TP_WS1.Controllers
         }
 
         // GET: Games
-        public async Task<IActionResult> Index(string? id)
+        public async Task<IActionResult> Index(int? id)
         {
             if (id != null)
             {
-                id = WebUtility.UrlDecode(id);
 
-                var tp1Ws1JeuxVideoContext = _context.Games.Include(g => g.GameGenre).Include(g => g.User).Include(p=> p.Posts.Count()).Where(g => g.Name == id);
-                Console.WriteLine("id : " + tp1Ws1JeuxVideoContext);
-                return View(await tp1Ws1JeuxVideoContext.ToListAsync());
+                var result =  _context.Posts.Where(p => p.GameId == id).Select(gp => new GamePost
+                {
+                    GameName = gp.Game.Name,
+                    nbPost = gp.Game.Posts.Count(),
+                    nbVue = gp.Click,
+                    author = gp.UserId,
+                    lastUserActivity = gp.User.Username,
+                    CreatedAt = gp.CreatedAt,
+                    UpdateAt = gp.UpdatedAt,
+                });
+
+                return View(await result.ToListAsync());
             }
             else
             {
-                var tp1Ws1JeuxVideoContext = _context.Games.Include(g => g.GameGenre).Include(g => g.User).Where(g => g.IsArchived == false);
-                return View(await tp1Ws1JeuxVideoContext.ToListAsync());
+                var result = _context.Posts.Select(gp => new GamePost
+                {
+                    GameName = gp.Game.Name,
+                    nbPost = gp.Game.Posts.Count(),
+                    nbVue = gp.Click,
+                    author = gp.UserId,
+                    lastUserActivity = gp.User.Username,
+                    CreatedAt = gp.CreatedAt,
+                    UpdateAt = gp.UpdatedAt,
+                }); ;
+                return View(await result.ToListAsync());
             }
             ;
         }

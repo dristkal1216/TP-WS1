@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using TP_WS1.ViewModels;
 
 namespace TP_WS1.Models;
 
@@ -172,6 +171,7 @@ public partial class Tp1Ws1JeuxVideoContext : DbContext
             entity.ToTable("Post");
 
             entity.Property(e => e.PostId).HasColumnName("Post_id");
+            entity.Property(e => e.Click).HasColumnName("click");
             entity.Property(e => e.CreatedAt)
                 .HasColumnType("datetime")
                 .HasColumnName("createdAt");
@@ -221,6 +221,4 @@ public partial class Tp1Ws1JeuxVideoContext : DbContext
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
-
-public DbSet<GGenreGame> GGenreGame { get; set; } = default!;
 }

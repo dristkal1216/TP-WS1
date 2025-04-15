@@ -23,6 +23,8 @@ public partial class Post
 
     public bool IsArchived { get; set; }
 
+    public int? Click { get; set; }
+
     public virtual Game Game { get; set; } = null!;
 
     public virtual User User { get; set; } = null!;
