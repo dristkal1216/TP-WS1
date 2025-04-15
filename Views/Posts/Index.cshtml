@@ -15,10 +15,10 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Title)
+                Titre
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Message)
+                Message
             </th>                                           
         </tr>
     </thead>
@@ -29,7 +29,7 @@
                 @Html.DisplayFor(modelItem => item.Title)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Message)
+                @Html.Raw(item.Message)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.User.UserName)

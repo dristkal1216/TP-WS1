@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using TP_WS1.ViewModels;
 
 namespace TP_WS1.Models;
 
@@ -70,13 +69,6 @@ public partial class Tp1Ws1JeuxVideoContext : DbContext
             entity.Property(e => e.NormalizedEmail).HasMaxLength(256);
             entity.Property(e => e.NormalizedUserName).HasMaxLength(256);
             entity.Property(e => e.UserName).HasMaxLength(256);
-
-
-            entity.HasOne(d => d.IdNavigation).WithOne(p => p.AspNetUser)
-                .HasForeignKey<AspNetUser>(d => d.Id)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_AspNetUsers_users");
-
 
             entity.HasMany(d => d.Roles).WithMany(p => p.Users)
                 .UsingEntity<Dictionary<string, object>>(
@@ -153,7 +145,6 @@ public partial class Tp1Ws1JeuxVideoContext : DbContext
 
             entity.HasOne(d => d.User).WithMany(p => p.Games)
                 .HasForeignKey(d => d.UserId)
-
                 .HasConstraintName("FK_Game_AspNetUsers");
         });
 
@@ -174,16 +165,9 @@ public partial class Tp1Ws1JeuxVideoContext : DbContext
         {
             entity.ToTable("Post");
 
-
             entity.Property(e => e.PostId)
                 .ValueGeneratedNever()
                 .HasColumnName("Post_id");
-
-            entity.Property(e => e.PostId).HasColumnName("Post_id");
-            entity.Property(e => e.CreatedAt)
-                .HasColumnType("datetime")
-                .HasColumnName("createdAt");
-
             entity.Property(e => e.GameId).HasColumnName("Game_id");
             entity.Property(e => e.IsArchived).HasColumnName("isArchived");
             entity.Property(e => e.Message)
@@ -193,9 +177,6 @@ public partial class Tp1Ws1JeuxVideoContext : DbContext
             entity.Property(e => e.Title)
                 .HasMaxLength(75)
                 .HasColumnName("title");
-            entity.Property(e => e.UpdatedAt)
-                .HasColumnType("datetime")
-                .HasColumnName("updatedAt");
             entity.Property(e => e.UserId)
                 .HasMaxLength(450)
                 .HasColumnName("user_id");
@@ -208,7 +189,6 @@ public partial class Tp1Ws1JeuxVideoContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.Posts)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-
                 .HasConstraintName("FK_Post_AspNetUsers");
         });
 
@@ -231,6 +211,4 @@ public partial class Tp1Ws1JeuxVideoContext : DbContext
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
-
-public DbSet<GGenreGame> GGenreGame { get; set; } = default!;
 }

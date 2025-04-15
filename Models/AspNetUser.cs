@@ -45,7 +45,5 @@ public partial class AspNetUser
 
     public virtual ICollection<Post> Posts { get; set; } = new List<Post>();
 
-    public virtual User IdNavigation { get; set; } = null!;
-
     public virtual ICollection<AspNetRole> Roles { get; set; } = new List<AspNetRole>();
 }

@@ -27,9 +27,5 @@ public partial class Game
 
     public virtual ICollection<Post> Posts { get; set; } = new List<Post>();
 
-
     public virtual AspNetUser? User { get; set; }
-
-
-
 }

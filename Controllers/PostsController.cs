@@ -24,20 +24,20 @@ namespace TP_WS1.Controllers
             var tp1Ws1JeuxVideoContext = _context.Posts.Include(p => p.Game).Include(p => p.User);
             return View(await tp1Ws1JeuxVideoContext.ToListAsync()); 
         }
-        public async Task<IActionResult> Index(int? id)
-        {
-            if(id != null)
-            {
-                var tp1Ws1JeuxVideoContext = _context.Posts.Include(p => p.Game).Include(p => p.User).Where(p => p.GameId == id);
-                return View(await tp1Ws1JeuxVideoContext.ToListAsync());
-            }else
-            {
-                 var tp1Ws1JeuxVideoContext = _context.Posts.Include(p => p.Game).Include(p => p.User);
-                 return View(await tp1Ws1JeuxVideoContext.ToListAsync());
-            }
+        //public async Task<IActionResult> Index(int? id)
+        //{
+        //    if(id != null)
+        //    {
+        //        var tp1Ws1JeuxVideoContext = _context.Posts.Include(p => p.Game).Include(p => p.User).Where(p => p.GameId == id);
+        //        return View(await tp1Ws1JeuxVideoContext.ToListAsync());
+        //    }else
+        //    {
+        //         var tp1Ws1JeuxVideoContext = _context.Posts.Include(p => p.Game).Include(p => p.User);
+        //         return View(await tp1Ws1JeuxVideoContext.ToListAsync());
+        //    }
 
                
-        }
+        //}
 
         // GET: Posts/Details/5
         public async Task<IActionResult> Details(int? id)

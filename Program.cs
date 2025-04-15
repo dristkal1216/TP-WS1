@@ -23,9 +23,6 @@ namespace TP_WS1
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString));
 
-            builder.Services.AddDbContext<Tp1Ws1JeuxVideoContext>(options =>
-                options.UseSqlServer(connectionString));
-
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
             builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
