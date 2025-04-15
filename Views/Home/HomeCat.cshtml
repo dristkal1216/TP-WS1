@@ -1,0 +1,39 @@
+﻿@model IEnumerable<TP_WS1.ViewModels.GGenreGame>
+
+@{
+    ViewData["Title"] = "Home Cat";
+}
+
+<h1>HomeCat</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Catégorie</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(m => item.fullName)
+                </td>
+               
+                    <tr>
+                        Sujets
+                    </tr>
+                
+                @foreach ( var sujet in item.Top3Games)
+                {
+                    <td>
+						@Html.DisplayFor(m => sujet.Name)
+                    </td>
+                }
+                
+            </tr>
+}
+    </tbody>
+</table>

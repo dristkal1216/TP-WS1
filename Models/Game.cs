@@ -16,4 +16,20 @@ public partial class Game
     public string GameEngine { get; set; } = null!;
 
     public string? UserId { get; set; }
+
+    public bool IsArchived { get; set; }
+
+    public DateTime? UpdatedAt { get; set; }
+
+    public DateTime? CreatedAt { get; set; }
+
+    public virtual GameGenre GameGenre { get; set; } = null!;
+
+    public virtual ICollection<Post> Posts { get; set; } = new List<Post>();
+
+<<<<<<< HEAD
+    public virtual AspNetUser? User { get; set; }
+=======
+    public virtual User? User { get; set; }
+>>>>>>> main
 }
