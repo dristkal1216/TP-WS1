@@ -29,10 +29,12 @@ namespace TP_WS1.Controllers
                 var result =  _context.Posts.Where(p => p.GameId == id).Select(gp => new GamePost
                 {
                     GameName = gp.Game.Name,
+                    PostName = gp.Title,
                     NbPost = gp.Game.Posts.Count(),
                     NbVue = gp.Click ,
-                    author = gp.UserId,
+                    author = gp.User.Username,
                     lastUserActivity = gp.User.Username,
+                    PostId = gp.PostId, 
                     CreatedAt = gp.CreatedAt,
                     UpdateAt = gp.UpdatedAt,
                 });
@@ -44,10 +46,12 @@ namespace TP_WS1.Controllers
                 var result = _context.Posts.Select(gp => new GamePost
                 {
                     GameName = gp.Game.Name,
+                    PostName = gp.Title,
                     NbPost = gp.Game.Posts.Count(),
                     NbVue = gp.Click,
                     author = gp.UserId,
                     lastUserActivity = gp.User.Username,
+                    PostId = gp.PostId,
                     CreatedAt = gp.CreatedAt,
                     UpdateAt = gp.UpdatedAt,
                 }); ;

@@ -5,26 +5,39 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+
+
+
+<h1>@Model.Select(gp=> gp.GameName).FirstOrDefault()</h1>
 
 <div class="container d-flex flex-row flex-sm-wrap">
     @foreach (var item in Model)
     {
-        <div class="card">
+        <div class="card shadow-lg m-auto my-5 border-3">
+            
         <div class="row g-0">
             <div class="col-md-4">
-                <svg class="bd-placeholder-img" width="100%" height="250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Image" preserveAspectRatio="xMidYMid slice" focusable="false">
-                    <title>@Html.DisplayFor(mbox=> item.GameName )</title>
-                        <rect width="100%" height="100%" fill="#868e96">
-                        </rect><text x="50%" y="50%" fill="#dee2e6" dy=".3em">Image</text>
-                    </svg>
+                    <a class="card-link" asp-area="" asp-controller="Posts" asp-action="Index" asp-route-id=@item.PostId>
+                        <svg class="bd-placeholder-img" width="100%" height="250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Image" preserveAspectRatio="xMidYMid slice" focusable="false">
+                            <rect width="100%" height="100%" fill="#868e96">
+
+                            </rect>
+                            <text x="50%" y="50%" fill="#dee2e6" dy=".3em">Image</text>
+                        </svg>
+                    </a>
+                
 
             </div>
-            <div class="col-md-8">
+            <div class="col-md-8 justify-content-between m-auto">
                 <div class="card-body">
-                        <h5 class="card-title">@Html.DisplayFor(mbox => item.GameName)</h5>
-                    <p class="card-text">@Html.DisplayFor(mbox=> item.NbPost) posts</p>
-                    <p class="card-text"><small class="text-muted">Last updated @Html.DisplayFor(mbox=> item.UpdateAt)</small></p>
+                        <h5 class="card-title my-1">@Html.DisplayFor(mbox => item.PostName)</h5>
+                        <p class="card-text my-1">@Html.DisplayFor(mbox => item.UpdateAt) Last Modified </p>
+                        <p class="card-text my-1">@Html.DisplayFor(mbox => item.NbPost) posts</p>
+                        <p class="card-text my-1"><small class="text-muted">Created by: <strong>@Html.DisplayFor(mbox => item.author)</strong></small></p>
+                        <p class="card-text my-1"><small class="text-muted">Last User's update: <strong>@Html.DisplayFor(mbox => item.lastUserActivity)</strong></small></p>
+                        <p class="card-text my-1"><small class="text-muted">Created at : <strong>@Html.DisplayFor(mbox => item.CreatedAt)</strong></small></p>
+                        <p class="card-text my-1"><small class="text-muted">Last updated :<strong>@Html.DisplayFor(mbox => item.UpdateAt)</strong></small></p>
+                        
                 </div>
             </div>
         </div>
