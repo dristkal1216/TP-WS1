@@ -27,7 +27,7 @@ namespace TP_WS1.Controllers
             {
 
                 var result =  _context.Posts.Where(p => p.GameId == id).Select(gp => new GamePost
-            {
+                {
                     GameName = gp.Game.Name,
                     PostName = gp.Title,
                     NbPost = gp.Game.Posts.Count(),
@@ -84,7 +84,7 @@ namespace TP_WS1.Controllers
         public IActionResult Create()
         {
             ViewData["GameGenreId"] = new SelectList(_context.GameGenres, "GameGenreId", "GameGenreId");
-            //ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId");
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
             return View();
         }
 
@@ -93,7 +93,7 @@ namespace TP_WS1.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("GameId,Name,GameGenreId,IsOnline,GameEngine,IsArchived")] Game game)
+        public async Task<IActionResult> Create([Bind("GameId,Name,GameGenreId,IsOnline,GameEngine,UserId,IsArchived,UpdatedAt,CreatedAt")] Game game)
         {
             if (ModelState.IsValid)
             {
@@ -102,7 +102,7 @@ namespace TP_WS1.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["GameGenreId"] = new SelectList(_context.GameGenres, "GameGenreId", "GameGenreId", game.GameGenreId);
-            //ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId", game.UserId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", game.UserId);
             return View(game);
         }
 
@@ -120,7 +120,7 @@ namespace TP_WS1.Controllers
                 return NotFound();
             }
             ViewData["GameGenreId"] = new SelectList(_context.GameGenres, "GameGenreId", "GameGenreId", game.GameGenreId);
-            //ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId", game.UserId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", game.UserId);
             return View(game);
         }
 
@@ -129,7 +129,7 @@ namespace TP_WS1.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("GameId,Name,GameGenreId,IsOnline,GameEngine,UserId,IsArchived")] Game game)
+        public async Task<IActionResult> Edit(int id, [Bind("GameId,Name,GameGenreId,IsOnline,GameEngine,UserId,IsArchived,UpdatedAt,CreatedAt")] Game game)
         {
             if (id != game.GameId)
             {
@@ -157,6 +157,7 @@ namespace TP_WS1.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["GameGenreId"] = new SelectList(_context.GameGenres, "GameGenreId", "GameGenreId", game.GameGenreId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", game.UserId);
             return View(game);
         }
 

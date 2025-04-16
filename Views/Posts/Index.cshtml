@@ -1,6 +1,4 @@
-﻿@using static  TP_WS1.Models.Post
-@model IEnumerable<TP_WS1.Models.Post>
-
+﻿@model IEnumerable<TP_WS1.Models.Post>
 
 @{
     ViewData["Title"] = "Index";
@@ -15,11 +13,32 @@
     <thead>
         <tr>
             <th>
-                Titre
+                @Html.DisplayNameFor(model => model.Title)
             </th>
             <th>
-                Message
-            </th>                                           
+                @Html.DisplayNameFor(model => model.Message)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReactionId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UpdatedAt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedAt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsArchived)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Click)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Game)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.User)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -30,10 +49,28 @@
                 @Html.DisplayFor(modelItem => item.Title)
             </td>
             <td>
-                @Html.Raw(item.Message)
+                @Html.DisplayFor(modelItem => item.Message)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.User.UserName)
+                @Html.DisplayFor(modelItem => item.ReactionId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UpdatedAt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedAt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsArchived)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Click)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Game.GameId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.User.Id)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.PostId">Edit</a> |

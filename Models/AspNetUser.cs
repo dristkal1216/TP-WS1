@@ -41,9 +41,7 @@ public partial class AspNetUser
 
     public virtual ICollection<AspNetUserToken> AspNetUserTokens { get; set; } = new List<AspNetUserToken>();
 
-    public virtual ICollection<Game> Games { get; set; } = new List<Game>();
-
-    public virtual ICollection<Post> Posts { get; set; } = new List<Post>();
+    public virtual User IdNavigation { get; set; } = null!;
 
     public virtual ICollection<AspNetRole> Roles { get; set; } = new List<AspNetRole>();
 }
