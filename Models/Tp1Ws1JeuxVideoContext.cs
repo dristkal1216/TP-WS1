@@ -70,11 +70,6 @@ public partial class Tp1Ws1JeuxVideoContext : DbContext
             entity.Property(e => e.NormalizedUserName).HasMaxLength(256);
             entity.Property(e => e.UserName).HasMaxLength(256);
 
-            entity.HasOne(d => d.IdNavigation).WithOne(p => p.AspNetUser)
-                .HasForeignKey<AspNetUser>(d => d.Id)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_AspNetUsers_users");
-
             entity.HasMany(d => d.Roles).WithMany(p => p.Users)
                 .UsingEntity<Dictionary<string, object>>(
                     "AspNetUserRole",
@@ -150,7 +145,7 @@ public partial class Tp1Ws1JeuxVideoContext : DbContext
 
             entity.HasOne(d => d.User).WithMany(p => p.Games)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK_Game_users");
+                .HasConstraintName("FK_Game_AspNetUsers");
         });
 
         modelBuilder.Entity<GameGenre>(entity =>
@@ -199,7 +194,7 @@ public partial class Tp1Ws1JeuxVideoContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.Posts)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Post_users1");
+                .HasConstraintName("FK_Post_AspNetUsers");
         });
 
         modelBuilder.Entity<User>(entity =>

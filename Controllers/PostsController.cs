@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ using TP_WS1.Models;
 
 namespace TP_WS1.Controllers
 {
+    [Authorize]
     public class PostsController : Controller
     {
         private readonly Tp1Ws1JeuxVideoContext _context;
@@ -28,12 +30,23 @@ namespace TP_WS1.Controllers
             }
             else
             {
-                var tp1Ws1JeuxVideoContext = _context.Posts.Include(p => p.Game).Include(p => p.User);
-                return View(await tp1Ws1JeuxVideoContext.ToListAsync());
-            }
-
-
+            var tp1Ws1JeuxVideoContext = _context.Posts.Include(p => p.Game).Include(p => p.User);
+            return View(await tp1Ws1JeuxVideoContext.ToListAsync()); 
         }
+        //public async Task<IActionResult> Index(int? id)
+        //{
+        //    if(id != null)
+        //    {
+        //        var tp1Ws1JeuxVideoContext = _context.Posts.Include(p => p.Game).Include(p => p.User).Where(p => p.GameId == id);
+        //        return View(await tp1Ws1JeuxVideoContext.ToListAsync());
+        //    }else
+        //    {
+        //         var tp1Ws1JeuxVideoContext = _context.Posts.Include(p => p.Game).Include(p => p.User);
+        //         return View(await tp1Ws1JeuxVideoContext.ToListAsync());
+        //    }
+
+               
+        //}
 
         // GET: Posts/Details/5
         public async Task<IActionResult> Details(int? id)
