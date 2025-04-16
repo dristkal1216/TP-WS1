@@ -17,4 +17,60 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\css\bootstrap\" />
+    <Folder Include="wwwroot\js\components\charts\" />
+    <Folder Include="wwwroot\js\components\custom\" />
+    <Folder Include="wwwroot\js\components\init\" />
+    <Folder Include="wwwroot\js\components\maps\" />
+    <Folder Include="wwwroot\js\components\vendor\" />
+    <Folder Include="wwwroot\js\plugins\%40fortawesome\fontawesome-free\css\" />
+    <Folder Include="wwwroot\js\plugins\%40fortawesome\fontawesome-free\js\" />
+    <Folder Include="wwwroot\js\plugins\%40fortawesome\fontawesome-free\sprites\" />
+    <Folder Include="wwwroot\js\plugins\%40fortawesome\fontawesome-free\svgs\brands\" />
+    <Folder Include="wwwroot\js\plugins\%40fortawesome\fontawesome-free\svgs\regular\" />
+    <Folder Include="wwwroot\js\plugins\%40fortawesome\fontawesome-free\svgs\solid\" />
+    <Folder Include="wwwroot\js\plugins\%40fortawesome\fontawesome-free\webfonts\" />
+    <Folder Include="wwwroot\js\plugins\anchor-js\" />
+    <Folder Include="wwwroot\js\plugins\bootstrap-datepicker\dist\css\" />
+    <Folder Include="wwwroot\js\plugins\bootstrap-datepicker\dist\js\" />
+    <Folder Include="wwwroot\js\plugins\bootstrap-datepicker\dist\locales\" />
+    <Folder Include="wwwroot\js\plugins\bootstrap\dist\css\" />
+    <Folder Include="wwwroot\js\plugins\bootstrap\dist\js\" />
+    <Folder Include="wwwroot\js\plugins\chart.js\dist\" />
+    <Folder Include="wwwroot\js\plugins\clipboard\dist\" />
+    <Folder Include="wwwroot\js\plugins\headroom.js\dist\" />
+    <Folder Include="wwwroot\js\plugins\holderjs\" />
+    <Folder Include="wwwroot\js\plugins\jquery-scroll-lock\dist\" />
+    <Folder Include="wwwroot\js\plugins\jquery.scrollbar\meteor\" />
+    <Folder Include="wwwroot\js\plugins\jquery.scrollbar\sass\" />
+    <Folder Include="wwwroot\js\plugins\jquery\dist\" />
+    <Folder Include="wwwroot\js\plugins\nouislider\distribute\" />
+    <Folder Include="wwwroot\js\plugins\nucleo\css\" />
+    <Folder Include="wwwroot\js\plugins\nucleo\fonts\" />
+    <Folder Include="wwwroot\js\plugins\onscreen\dist\" />
+    <Folder Include="wwwroot\js\plugins\prismjs\components\" />
+    <Folder Include="wwwroot\js\plugins\prismjs\plugins\autolinker\" />
+    <Folder Include="wwwroot\js\plugins\prismjs\plugins\autoloader\" />
+    <Folder Include="wwwroot\js\plugins\prismjs\plugins\command-line\" />
+    <Folder Include="wwwroot\js\plugins\prismjs\plugins\copy-to-clipboard\" />
+    <Folder Include="wwwroot\js\plugins\prismjs\plugins\custom-class\" />
+    <Folder Include="wwwroot\js\plugins\prismjs\plugins\data-uri-highlight\" />
+    <Folder Include="wwwroot\js\plugins\prismjs\plugins\file-highlight\" />
+    <Folder Include="wwwroot\js\plugins\prismjs\plugins\highlight-keywords\" />
+    <Folder Include="wwwroot\js\plugins\prismjs\plugins\jsonp-highlight\" />
+    <Folder Include="wwwroot\js\plugins\prismjs\plugins\keep-markup\" />
+    <Folder Include="wwwroot\js\plugins\prismjs\plugins\line-highlight\" />
+    <Folder Include="wwwroot\js\plugins\prismjs\plugins\line-numbers\" />
+    <Folder Include="wwwroot\js\plugins\prismjs\plugins\normalize-whitespace\" />
+    <Folder Include="wwwroot\js\plugins\prismjs\plugins\previewers\" />
+    <Folder Include="wwwroot\js\plugins\prismjs\plugins\remove-initial-line-feed\" />
+    <Folder Include="wwwroot\js\plugins\prismjs\plugins\show-invisibles\" />
+    <Folder Include="wwwroot\js\plugins\prismjs\plugins\show-language\" />
+    <Folder Include="wwwroot\js\plugins\prismjs\plugins\toolbar\" />
+    <Folder Include="wwwroot\js\plugins\prismjs\plugins\unescaped-markup\" />
+    <Folder Include="wwwroot\js\plugins\prismjs\plugins\wpd\" />
+    <Folder Include="wwwroot\js\plugins\prismjs\themes\" />
+  </ItemGroup>
+
 </Project>

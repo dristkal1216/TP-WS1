@@ -6,9 +6,7 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-    <section>
+    <section  class="my-3">
         <h2>What's Poppin'</h2>
 		@if (Model == null || !Model.Any())
 		{
@@ -16,11 +14,11 @@
 		}
 		else
 		{
-			<div class="container d-flex flex-sm-wrap">
+			<div class="container d-flex flex-row flex-sm-wrap">
 				@foreach (var item in Model)
 				{
 					
-						<div class="card col-6">
+						<div class="card col-4 ">
 							<div class="card-body">
 								<h5 class="card-title">@Html.DisplayFor(m => item.fullName)</h5>
 							</div>

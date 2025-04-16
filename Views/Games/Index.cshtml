@@ -8,12 +8,12 @@
 
 
 
-<h1>@Model.Select(gp=> gp.GameName).FirstOrDefault()</h1>
+<h1 class="display-4 my-3">@Model.Select(gp => gp.GameName).FirstOrDefault()</h1>
 
 <div class="container d-flex flex-row flex-sm-wrap">
     @foreach (var item in Model)
     {
-        <div class="card shadow-lg m-auto my-5 border-3">
+        <div class="card shadow-lg m-auto my-3 border-3">
             
         <div class="row g-0">
             <div class="col-md-4">
