@@ -59,7 +59,7 @@ namespace TP_WS1.Controllers
         public IActionResult Create()
         {
             ViewData["GameId"] = new SelectList(_context.Games, "GameId", "GameId");
-            ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId");
+            ViewData["UserId"] = new SelectList(_context.AspNetUsers, "UserId", "UserId");
             return View();
         }
 
@@ -77,7 +77,7 @@ namespace TP_WS1.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["GameId"] = new SelectList(_context.Games, "GameId", "GameId", post.GameId);
-            ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId", post.UserId);
+            ViewData["UserId"] = new SelectList(_context.AspNetUsers, "UserId", "UserId", post.UserId);
             return View(post);
         }
 
@@ -95,7 +95,7 @@ namespace TP_WS1.Controllers
                 return NotFound();
             }
             ViewData["GameId"] = new SelectList(_context.Games, "GameId", "GameId", post.GameId);
-            ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId", post.UserId);
+            ViewData["UserId"] = new SelectList(_context.AspNetUsers, "UserId", "UserId", post.UserId);
             return View(post);
         }
 
@@ -132,7 +132,7 @@ namespace TP_WS1.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["GameId"] = new SelectList(_context.Games, "GameId", "GameId", post.GameId);
-            ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId", post.UserId);
+            ViewData["UserId"] = new SelectList(_context.AspNetUsers, "UserId", "UserId", post.UserId);
             return View(post);
         }
 

@@ -11,5 +11,9 @@ public partial class GameGenre
 
     public bool IsArchived { get; set; }
 
+    public string? Userid { get; set; }
+
     public virtual ICollection<Game> Games { get; set; } = new List<Game>();
+
+    public virtual AspNetUser? User { get; set; }
 }

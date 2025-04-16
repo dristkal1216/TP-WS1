@@ -33,8 +33,6 @@ public partial class Tp1Ws1JeuxVideoContext : DbContext
 
     public virtual DbSet<Post> Posts { get; set; }
 
-    public virtual DbSet<User> Users { get; set; }
-
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlServer("Name=ConnectionStrings:DefaultConnection");
 
@@ -69,11 +67,6 @@ public partial class Tp1Ws1JeuxVideoContext : DbContext
             entity.Property(e => e.NormalizedEmail).HasMaxLength(256);
             entity.Property(e => e.NormalizedUserName).HasMaxLength(256);
             entity.Property(e => e.UserName).HasMaxLength(256);
-
-            entity.HasOne(d => d.IdNavigation).WithOne(p => p.AspNetUser)
-                .HasForeignKey<AspNetUser>(d => d.Id)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_AspNetUsers_users");
 
             entity.HasMany(d => d.Roles).WithMany(p => p.Users)
                 .UsingEntity<Dictionary<string, object>>(
@@ -150,7 +143,7 @@ public partial class Tp1Ws1JeuxVideoContext : DbContext
 
             entity.HasOne(d => d.User).WithMany(p => p.Games)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK_Game_users");
+                .HasConstraintName("FK_Game_AspNetUsers");
         });
 
         modelBuilder.Entity<GameGenre>(entity =>
@@ -164,6 +157,13 @@ public partial class Tp1Ws1JeuxVideoContext : DbContext
                 .HasMaxLength(50)
                 .HasColumnName("fullName");
             entity.Property(e => e.IsArchived).HasColumnName("isArchived");
+            entity.Property(e => e.Userid)
+                .HasMaxLength(450)
+                .HasColumnName("userid");
+
+            entity.HasOne(d => d.User).WithMany(p => p.GameGenres)
+                .HasForeignKey(d => d.Userid)
+                .HasConstraintName("FK_GameGenre_AspNetUsers");
         });
 
         modelBuilder.Entity<Post>(entity =>
@@ -199,22 +199,7 @@ public partial class Tp1Ws1JeuxVideoContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.Posts)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Post_users1");
-        });
-
-        modelBuilder.Entity<User>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__users__CB9A1CFF4B730E53");
-
-            entity.ToTable("users");
-
-            entity.Property(e => e.LastActivity)
-                .HasColumnType("datetime")
-                .HasColumnName("lastActivity");
-            entity.Property(e => e.PostId).HasColumnName("post_id");
-            entity.Property(e => e.Username)
-                .HasMaxLength(50)
-                .HasColumnName("username");
+                .HasConstraintName("FK_Post_AspNetUsers");
         });
 
         OnModelCreatingPartial(modelBuilder);

@@ -32,8 +32,8 @@ namespace TP_WS1.Controllers
                     PostName = gp.Title,
                     NbPost = gp.Game.Posts.Count(),
                     NbVue = gp.Click ,
-                    author = gp.User.Username,
-                    lastUserActivity = gp.User.Username,
+                    author = gp.User.UserName,
+                    lastUserActivity = gp.User.UserName,
                     PostId = gp.PostId, 
                     CreatedAt = gp.CreatedAt,
                     UpdateAt = gp.UpdatedAt,
@@ -50,7 +50,7 @@ namespace TP_WS1.Controllers
                     NbPost = gp.Game.Posts.Count(),
                     NbVue = gp.Click,
                     author = gp.UserId,
-                    lastUserActivity = gp.User.Username,
+                    lastUserActivity = gp.User.UserName,
                     PostId = gp.PostId,
                     CreatedAt = gp.CreatedAt,
                     UpdateAt = gp.UpdatedAt,
@@ -84,7 +84,7 @@ namespace TP_WS1.Controllers
         public IActionResult Create()
         {
             ViewData["GameGenreId"] = new SelectList(_context.GameGenres, "GameGenreId", "GameGenreId");
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
+            ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "Id");
             return View();
         }
 
@@ -102,7 +102,7 @@ namespace TP_WS1.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["GameGenreId"] = new SelectList(_context.GameGenres, "GameGenreId", "GameGenreId", game.GameGenreId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", game.UserId);
+            ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "Id", game.UserId);
             return View(game);
         }
 
@@ -120,7 +120,7 @@ namespace TP_WS1.Controllers
                 return NotFound();
             }
             ViewData["GameGenreId"] = new SelectList(_context.GameGenres, "GameGenreId", "GameGenreId", game.GameGenreId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", game.UserId);
+            ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "Id", game.UserId);
             return View(game);
         }
 
@@ -157,7 +157,7 @@ namespace TP_WS1.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["GameGenreId"] = new SelectList(_context.GameGenres, "GameGenreId", "GameGenreId", game.GameGenreId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", game.UserId);
+            ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "Id", game.UserId);
             return View(game);
         }
 
