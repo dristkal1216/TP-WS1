@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +13,8 @@ using TP_WS1.ViewModels;
 
 namespace TP_WS1.Controllers
 {
+    //[Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "User")]
     public class GamesController : Controller
     {
         private readonly Tp1Ws1JeuxVideoContext _context;
@@ -21,7 +25,7 @@ namespace TP_WS1.Controllers
         }
 
         // GET: Games
-        public async Task<IActionResult> Index(int? id)
+        public async Task<IActionResult> Index(int? id,DateTime? dateTime)
         {
             if (id != null)
             {
@@ -40,6 +44,22 @@ namespace TP_WS1.Controllers
                 });
 
                 return View(result);
+            } else if (dateTime != null)
+            {
+                var result = _context.Posts.Where(p => p.UpdatedAt == dateTime).Select(gp => new GamePost
+                {
+                    GameName = gp.Game.Name,
+                    PostName = gp.Title,
+                    NbPost = gp.Game.Posts.Count(),
+                    NbVue = gp.Click,
+                    author = gp.User.UserName,
+                    lastUserActivity = gp.User.UserName,
+                    PostId = gp.PostId,
+                    CreatedAt = gp.CreatedAt,
+                    UpdateAt = gp.UpdatedAt,
+                });
+
+                return View(result);
             }
             else
             {
@@ -49,7 +69,7 @@ namespace TP_WS1.Controllers
                     PostName = gp.Title,
                     NbPost = gp.Game.Posts.Count(),
                     NbVue = gp.Click,
-                    author = gp.UserId,
+                    author = gp.User.UserName,
                     lastUserActivity = gp.User.UserName,
                     PostId = gp.PostId,
                     CreatedAt = gp.CreatedAt,
@@ -80,17 +100,22 @@ namespace TP_WS1.Controllers
             return View(game);
         }
 
-        // GET: Games/Create
+        [Authorize]
         public IActionResult Create()
         {
-            ViewData["GameGenreId"] = new SelectList(_context.GameGenres, "GameGenreId", "GameGenreId");
-            ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "Id");
-            return View();
+
+                ViewData["GameGenreId"] = new SelectList(_context.GameGenres, "GameGenreId", "GameGenreId");
+                ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "Id");
+                return View();
+
         }
+
+
 
         // POST: Games/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("GameId,Name,GameGenreId,IsOnline,GameEngine,UserId,IsArchived,UpdatedAt,CreatedAt")] Game game)
@@ -109,91 +134,130 @@ namespace TP_WS1.Controllers
         // GET: Games/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
-            var game = await _context.Games.FindAsync(id);
-            if (game == null)
+            var userIdPost = await _context.Posts.Where(p => p.PostId == id).Select(p => p.UserId).FirstOrDefaultAsync();
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (currentUserId == userIdPost || User.IsInRole("Admin"))
             {
-                return NotFound();
+                if (id == null)
+                {
+                    return NotFound();
+                }
+
+                var game = await _context.Games.FindAsync(id);
+                if (game == null)
+                {
+                    return NotFound();
+                }
+
+                ViewData["GameGenreId"] =
+                    new SelectList(_context.GameGenres, "GameGenreId", "GameGenreId", game.GameGenreId);
+                ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "Id", game.UserId);
+                return View(game);
             }
-            ViewData["GameGenreId"] = new SelectList(_context.GameGenres, "GameGenreId", "GameGenreId", game.GameGenreId);
-            ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "Id", game.UserId);
-            return View(game);
+            else
+            {
+                return RedirectToAction(nameof(Index), new { id = id });
+            }
         }
+
+
 
         // POST: Games/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("GameId,Name,GameGenreId,IsOnline,GameEngine,UserId,IsArchived,UpdatedAt,CreatedAt")] Game game)
         {
-            if (id != game.GameId)
+            var userIdPost = await _context.Posts.Where(p => p.PostId == id).Select(p => p.UserId).FirstOrDefaultAsync();
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (currentUserId == userIdPost || User.IsInRole("Admin"))
             {
-                return NotFound();
-            }
+                if (id != game.GameId)
+                {
+                    return NotFound();
+                }
 
-            if (ModelState.IsValid)
-            {
-                try
+                if (ModelState.IsValid)
                 {
-                    _context.Update(game);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!GameExists(game.GameId))
+                    try
                     {
-                        return NotFound();
+                        _context.Update(game);
+                        await _context.SaveChangesAsync();
                     }
-                    else
+                    catch (DbUpdateConcurrencyException)
                     {
-                        throw;
+                        if (!GameExists(game.GameId))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
                     }
+
+                    return RedirectToAction(nameof(Index), new { id = id });
                 }
-                return RedirectToAction(nameof(Index));
+
+                ViewData["GameGenreId"] =
+                    new SelectList(_context.GameGenres, "GameGenreId", "GameGenreId", game.GameGenreId);
+                ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "Id", game.UserId);
+                return View(game);
             }
-            ViewData["GameGenreId"] = new SelectList(_context.GameGenres, "GameGenreId", "GameGenreId", game.GameGenreId);
-            ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "Id", game.UserId);
-            return View(game);
+            else
+            {
+        return RedirectToAction(nameof(Index), new { id = id });
+    }
+
+
         }
 
         // GET: Games/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+           
 
-            var game = await _context.Games
-                .Include(g => g.GameGenre)
-                .Include(g => g.User)
-                .FirstOrDefaultAsync(m => m.GameId == id);
-            if (game == null)
-            {
-                return NotFound();
-            }
+                if (id == null)
+                {
+                    return NotFound();
+                }
 
-            return View(game);
+                var game = await _context.Games
+                    .Include(g => g.GameGenre)
+                    .Include(g => g.User)
+                    .FirstOrDefaultAsync(m => m.GameId == id);
+                if (game == null)
+                {
+                    return NotFound();
+                }
+
+                return View(game);
+
         }
 
+        [Authorize]
         // POST: Games/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var game = await _context.Games.FindAsync(id);
-            if (game != null)
-            {
-                _context.Games.Remove(game);
-            }
 
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+
+                var game = await _context.Games.FindAsync(id);
+                if (game != null)
+                {
+                    _context.Games.Remove(game);
+                }
+
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+
+            
+
         }
 
         private bool GameExists(int id)

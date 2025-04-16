@@ -24,9 +24,9 @@
 			<ul class="navbar-nav ms-auto">
 				<li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
 					<partial name="_LoginPartial"/>
-				@* @if(User.IsInRole("Admin")){ *@
-
-				@* } *@
+				@if(User.IsInRole("Admin")){ 
+						<li class="nav-item"><a class="nav-link" asp-area="" asp-controller="AspNetUsers" asp-action="Index">Admin Page</a></li>
+				}
 			</ul>
 		</div>
 	</div>

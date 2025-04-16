@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -56,6 +57,7 @@ namespace TP_WS1.Controllers
             return View(gameGenre);
         }
 
+        [Authorize(Roles = "Admin")]
         // GET: GameGenres/Create
         public IActionResult Create()
         {
@@ -79,6 +81,7 @@ namespace TP_WS1.Controllers
         }
 
         // GET: GameGenres/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(string id)
         {
             if (id == null)
@@ -99,6 +102,7 @@ namespace TP_WS1.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(string id, [Bind("GameGenreId,FullName,IsArchived")] GameGenre gameGenre)
         {
             if (id != gameGenre.GameGenreId)
@@ -130,6 +134,7 @@ namespace TP_WS1.Controllers
         }
 
         // GET: GameGenres/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(string id)
         {
             if (id == null)
@@ -150,6 +155,7 @@ namespace TP_WS1.Controllers
         // POST: GameGenres/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
             var gameGenre = await _context.GameGenres.FindAsync(id);

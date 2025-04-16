@@ -1,0 +1,62 @@
+﻿@model List<TP_WS1.ViewModels.UserDetails>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Page Admin</h1>
+
+
+<table class="table">
+    <thead>
+        <tr>
+	        <th>Username</th>
+	        <th>Role</th>
+	        <th>Nombre de sujets crées</th>
+	        <th>Nombre de Messages crées</th>
+        <th>Dernière Activité</th>
+		<th>Link</th>
+        <tbody>
+        @foreach (var item in Model) {
+            <tr>
+	            <td>@Html.DisplayFor(m => item.Username)</td>
+				<td>
+							@foreach (var role in item.Role)
+							{
+								@role.Name
+							}
+				</td>
+                
+                <td>@Html.DisplayFor(m => item.Nb_sujetCreated)</td>
+                <td>@Html.DisplayFor(m => item.Nb_MessageCreated)</td>
+                <td>@Html.DisplayFor(m => item.LastActivity)</td>
+				<td>
+							@if (item.LastActivity == item.LastPostActivity)
+							{
+						<a class="btn-link"
+						   asp-controller="Posts"
+						   asp-action="Index"
+						   asp-route-dateTime="@item.LastPostActivity">
+							Voir dernière activité Post
+						</a>
+							}
+							else if (item.LastActivity == item.LastGameActivity)
+							{
+						<a class="btn-link"
+						   asp-controller="Games"
+						   asp-action="Index"
+						   asp-route-dateTime="@item.LastGameActivity">
+							Voir dernière activité Game
+						</a>
+							}
+							else
+							{
+						<span>Aucune activité</span>
+							}
+				</td>
+               
+                
+            </tr>
+        }
+        </tbody>
+</table>
