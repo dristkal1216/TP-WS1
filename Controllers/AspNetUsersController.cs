@@ -24,13 +24,14 @@ namespace TP_WS1.Controllers
         // GET: AspNetUsers
         public async Task<IActionResult> Index()
         {
-            var result = await _context.AspNetUsers
+            var result = await _context.AspNetUsers.Include(u=> u.Posts)
                 .Select(u => new UserDetails
                 {
                     Username = u.UserName,
                     Role = u.Roles,
                     Nb_sujetCreated = u.Games.Count(),
                     Nb_MessageCreated = u.Posts.Count(),
+                    Posts = u.Posts.ToList(),
 
                     // Date du dernier Post
                     LastPostActivity = u.Posts

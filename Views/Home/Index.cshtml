@@ -26,14 +26,14 @@
 								@foreach (var sujet in item.Top3Games)
 								{
 									<il class="list-group-item d-flex flex-row">
-										<a class="card-link fw-bold w-100 row-cols-1" asp-area="" asp-controller="Games" asp-action="Index" asp-route-id=@sujet.GameId>@Html.DisplayFor(m => sujet.Name)</a>
+										<a class="card-link fw-bold w-100 row-cols-1" asp-area="" asp-controller="Posts" asp-action="Index" asp-route-id=@sujet.GameId>@Html.DisplayFor(m => sujet.Name)</a>
 									<h6 class="card-text w-50 row-cols-2"><small>Last modified :@Html.DisplayFor(m => sujet.UpdatedAt)</small></h6>
 									<h6 class="card-text w-50 row-cols-2"><small>Created at :@Html.DisplayFor(m => sujet.CreatedAt)</small></h6>
 									</il>
 								}
 							</ul>
 							<div class="card-body">
-								<a class="card-link" asp-area="" asp-controller="GameGenres" asp-action="Index" asp-route-id=@Html.DisplayFor(m=> item.fullName)>Voir Categorie</a>
+							<a class="card-link" asp-area="" asp-controller="GameGenres" asp-action="Index" asp-route-id=@item.Top3Games.Select(g=> g.GameId).FirstOrDefault()>Voir Categorie</a>
 							</div>
 						</div>
 					

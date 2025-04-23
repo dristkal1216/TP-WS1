@@ -33,7 +33,6 @@ namespace TP_WS1.Controllers
                 var result =  _context.Posts.Where(p => p.GameId == id).Select(gp => new GamePost
                 {
                     GameName = gp.Game.Name,
-                    PostName = gp.Title,
                     NbPost = gp.Game.Posts.Count(),
                     NbVue = gp.Click ,
                     author = gp.User.UserName,
@@ -49,7 +48,6 @@ namespace TP_WS1.Controllers
                 var result = _context.Posts.Where(p => p.UpdatedAt == dateTime).Select(gp => new GamePost
                 {
                     GameName = gp.Game.Name,
-                    PostName = gp.Title,
                     NbPost = gp.Game.Posts.Count(),
                     NbVue = gp.Click,
                     author = gp.User.UserName,
@@ -66,7 +64,6 @@ namespace TP_WS1.Controllers
                 var result = _context.Posts.Select(gp => new GamePost
                 {
                     GameName = gp.Game.Name,
-                    PostName = gp.Title,
                     NbPost = gp.Game.Posts.Count(),
                     NbVue = gp.Click,
                     author = gp.User.UserName,
@@ -101,13 +98,15 @@ namespace TP_WS1.Controllers
         }
 
         [Authorize]
-        public IActionResult Create()
+        public IActionResult Create(string? id)
         {
-
-                ViewData["GameGenreId"] = new SelectList(_context.GameGenres, "GameGenreId", "GameGenreId");
-                ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "Id");
-                return View();
-
+            var game = new Game
+            {
+                GameGenreId = id,
+                IsArchived = false,
+                IsOnline = false
+            };
+            return View(game);
         }
 
 
@@ -118,18 +117,22 @@ namespace TP_WS1.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("GameId,Name,GameGenreId,IsOnline,GameEngine,UserId,IsArchived,UpdatedAt,CreatedAt")] Game game)
+        public async Task<IActionResult> Create([Bind("GameGenreId,Name,GameEngine,IsOnline,IsArchived")] Game game)
         {
+            game.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            game.CreatedAt = DateTime.UtcNow;
+            game.UpdatedAt = DateTime.UtcNow;
+
             if (ModelState.IsValid)
             {
                 _context.Add(game);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+
+                return RedirectToAction(nameof(Index), "GameGenres", new { id = game.GameGenreId });
             }
-            ViewData["GameGenreId"] = new SelectList(_context.GameGenres, "GameGenreId", "GameGenreId", game.GameGenreId);
-            ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "Id", game.UserId);
             return View(game);
         }
+
 
         // GET: Games/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -209,8 +212,8 @@ namespace TP_WS1.Controllers
             }
             else
             {
-        return RedirectToAction(nameof(Index), new { id = id });
-    }
+                return RedirectToAction(nameof(Index), new { id = id });
+            }
 
 
         }

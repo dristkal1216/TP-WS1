@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace TP_WS1.Models;
 
@@ -23,8 +24,10 @@ public partial class Game
 
     public DateTime? CreatedAt { get; set; }
 
+    [ValidateNever]
     public virtual GameGenre GameGenre { get; set; } = null!;
 
+    [ValidateNever]
     public virtual ICollection<Post> Posts { get; set; } = new List<Post>();
 
     public virtual AspNetUser? User { get; set; }

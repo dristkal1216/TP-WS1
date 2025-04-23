@@ -1,82 +1,273 @@
-﻿@model IEnumerable<TP_WS1.Models.Post>
+﻿@using System.Security.Claims
+@model TP_WS1.ViewModels.ViewPost
 
 @{
     ViewData["Title"] = "Index";
+    // 1) On reprend la date qu’on a mise dans le Controller
+    var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
 }
 
-<h1>Index</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Message)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ReactionId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UpdatedAt)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedAt)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsArchived)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Click)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Game)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.User)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Message)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ReactionId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UpdatedAt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedAt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsArchived)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Click)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Game.GameId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.Id)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.PostId">Edit</a> |
-                <a asp-action="Delete" asp-route-id="@item.PostId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<style>
+    /* Container: light background, rounded corners, subtle shadow */
+    .chat-window {
+        background-color: #fc5915; /* deep dark base */
+        : contentReference[oaicite:11]
+
+    {
+        index =11
+    }
+
+    color: #e0e0e0; /* light text for contrast */ :contentReference[oaicite:12] {
+        index =12
+    }
+
+    display: flex; /* flex container */
+    flex-direction: column; /* vertical stacking */ :contentReference[oaicite:13] {
+        index =13
+    }
+
+    gap: 1.5rem; /* breath between posts */ :contentReference[oaicite:14] {
+        index =14
+    }
+
+    overflow-y: auto; /* vertical scroll */ :contentReference[oaicite:15] {
+        index =15
+    }
+
+    max-height: 70vh; /* height limit */
+    padding: 1rem; /* container padding */
+    }
+
+        /* Each post bubble: white background with hover effect */
+    .chat-window .post {
+        background-color: #f94a27; /* charcoal bubble */
+        : contentReference[oaicite:16]
+
+    {
+        index =16
+    }
+
+    border: 1px solid #333333; /* clear contour */ :contentReference[oaicite:17] {
+        index =17
+    }
+
+    border-radius: 8px; /* rounded corners */ :contentReference[oaicite:18] {
+        index =18
+    }
+
+    padding: 1rem; /* bubble padding */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.8); /* deep, soft shadow */ :contentReference[oaicite:19] {
+        index =19
+    }
+
+    }
+
+            .chat-window .post:hover {
+        background-color: #f21f5d; /* léger survol pour feedback visuel */
+                transform: translateY(-2px); /* soulèvement discret au survol */
+            }
+
+        /* Message text: ensure wrapping and full width */
+        .chat-window .chat-message {
+            min-width: 0; /* empêche le rétrécissement excessif en flexbox */
+            word-wrap: break-word; /* coupe les longs mots pour éviter le débordement */
+        }
+
+        /* Custom scrollbar styling for WebKit browsers */
+        .chat-window::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .chat-window::-webkit-scrollbar-track {
+        background: #ffa048;
+            border-radius: 4px;
+        }
+
+        .chat-window::-webkit-scrollbar-thumb {
+            background-color: #b1b1b1;
+            border-radius: 4px;
+            border: 2px solid #ffa048;
+        }
+
+    /* “Edit” button: small, rounded, outline style */
+    .btn-edit {
+        background-color: #f1bea7; /* subtle black overlay */
+        border: 1px solid #f73c38; /* primary outline */
+        border-radius: 6px; /* slightly rounded */
+        color: #f11c62; /* accent color */
+        text : bold;
+        padding: 0.4rem 0.8rem; /* larger click area */
+        font-size: 0.875rem; /* small text */
+        transition: background-color 0.2s ease; /* smooth hover */
+    }
+
+        .btn-edit:hover {
+            background-color: #fc5815 /* darker on hover */
+        }
+
+</style>
+
+<h1>@Model.ViewPosts.FirstOrDefault()?.Game?.Name</h1>
+
+<div class="chat-window mb-4">
+    @foreach (var post in Model.ViewPosts)
+    {
+
+		<div class="post d-flex mb-3 " data-post-id="@post.PostId">
+            <div class="flex-shrink-0 me-3">
+                <img src="/img/default-avatar.png"
+                     alt="avatar"
+                     class="rounded-circle"
+                     style="width:40px; height:40px;" />
+            </div>
+            <div class="chat-message w-100 h-100">
+	            <div class="fw-bold mb-1">
+		            @post.User.UserName
+		            <small class="text-muted ms-2">
+			            @post.UpdatedAt.ToString()
+		            </small>
+	            </div>
+	            <div class="message">
+		            @Html.Raw(post.Message)
+	            </div>
+            </div>
+            @if (User.Identity.IsAuthenticated
+                 && (post.UserId == currentUserId || User.IsInRole("Admin")))
+            {
+				<button class="btn-edit btn-outline-primary btn-sm me-2">
+			            Edit
+		            </button>
+	            
+            }
+        </div>
+    }
+</div>
+
+<div class="row">
+	<div class="col-md-4">
+		<form asp-controller="Posts" asp-action="Index" method="post">
+			@Html.AntiForgeryToken()
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+			<input type="hidden" asp-for="GameId"/>
+			<input type="hidden" asp-for="IsArchived " value="false"/>
+			<input type="hidden" asp-for="UserId" value="@Model.UserId"/>
+			<div class="form-group">
+				<label asp-for="Message" class="control-label"></label>
+				<textarea asp-for="Message" type="text" id="tiny" class="form-control"> </textarea>
+				<span asp-validation-for="Message" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<input type="submit" value="Send" class="btn btn-primary"/>
+			</div>
+		</form>
+	</div>
+</div>
+<script>
+           // module-scope holders for the currently open edit
+    let activeBtn  = null;
+    let activeForm = null;
+
+    function handleClick(e) {
+      e.preventDefault();
+      const btn    = e.currentTarget;
+      const postEl = btn.closest('.post');
+      if (!postEl) return;
+
+      // 1) If we already have an open form, close it
+      if (activeForm) {
+        // restore the original message div
+        const originalMsg = activeForm.dataset.originalMsgEl;
+        activeForm.replaceWith(originalMsg);
+        // re-enable the last edit button
+        activeBtn.disabled = false;
+        activeBtn.classList.remove('active');
+        activeBtn = activeForm = null;
+      }
+
+      // 2) Now open this one
+      const msgEl   = postEl.querySelector('.message');
+      const oldText = msgEl.innerText;
+      const postId  = postEl.dataset.postId;
+
+          const tokenInput = document.querySelector('input[name="__RequestVerificationToken"]');
+    const tokenValue = tokenInput ? tokenInput.value : '';
+
+      // build your form as before…
+      const formHtml = `
+        <form action="/Posts/Update" method="post" class="chat-message">
+        <input type="hidden" name="__RequestVerificationToken" value="${tokenValue}" />
+          <input type="hidden" name="PostId" value="${postId}" />
+          <div class="message form-group mb-2">
+            <textarea name="Message" class="form-control" type="text" id="tiny" rows="4">${oldText}</textarea>
+          </div>
+          <div class="d-flex">
+            <button type="submit" class="btn btn-outline-primary btn-sm me-2">
+              <i class="bi bi-save"></i> Save
+            </button>
+            <button type="button" class="btn btn-outline-secondary btn-sm btn-cancel">
+              <i class="bi bi-x-lg"></i> Cancel
+            </button>
+          </div>
+        </form>`.trim();
+
+      // 3) Replace the message div
+      const wrapper = document.createElement('div');
+      wrapper.innerHTML = formHtml;
+      const formEl = wrapper.firstElementChild;
+
+      // stash the original msgEl so we can restore it later
+      formEl.dataset.originalMsgEl = msgEl;
+
+      msgEl.replaceWith(formEl);
+
+      // 4) Mark this button as active + disable it
+      btn.disabled = true;
+      btn.classList.add('active');
+
+      // store them so we can close later
+      activeBtn  = btn;
+      activeForm = formEl;
+
+      // wire up Cancel
+      formEl.querySelector('.btn-cancel').addEventListener('click', () => {
+        formEl.replaceWith(formEl.dataset.originalMsgEl);
+        btn.disabled = false;
+        btn.classList.remove('active');
+        activeBtn = activeForm = null;
+      });
+
+      // Example: in your handleClick, after replacing the message/form:
+    formEl.querySelector('button[type="submit"]').addEventListener('click', () => {
+      // (let the form submit happen first)
+      setTimeout(() => scrollChatWindowToBottom(postEl), 0);
+    });
+    }
+
+           window.addEventListener('load', () => {
+      // scroll the whole page
+      window.scrollTo(0, document.body.scrollHeight);
+
+      // scroll each chat-window container
+      document.querySelectorAll('.chat-window').forEach(cw => {
+        cw.scrollTop = cw.scrollHeight;
+      });
+    });
+
+    // 2) After you inject or update a chat message (e.g. at the end of handleClick or after form submit),
+    //    scroll just that chat window down again so new content is visible.
+    function scrollChatWindowToBottom(postEl) {
+      const cw = postEl.closest('.chat-window') || document.querySelector('.chat-window');
+      if (!cw) return;
+      cw.scrollTop = cw.scrollHeight;
+    }
+
+      document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.btn-edit')
+              .forEach(btn => btn.addEventListener('click', handleClick));
+    });
+
+
+	</script>
+

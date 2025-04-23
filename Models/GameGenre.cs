@@ -11,7 +11,7 @@ public partial class GameGenre
 
     public bool IsArchived { get; set; }
 
-    public string? Userid { get; set; }
+    public string? UserId { get; set; }
 
     public virtual ICollection<Game> Games { get; set; } = new List<Game>();
 

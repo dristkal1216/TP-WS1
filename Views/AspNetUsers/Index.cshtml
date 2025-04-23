@@ -33,25 +33,29 @@
 				<td>
 							@if (item.LastActivity == item.LastPostActivity)
 							{
-						<a class="btn-link"
-						   asp-controller="Posts"
-						   asp-action="Index"
-						   asp-route-dateTime="@item.LastPostActivity">
-							Voir dernière activité Post
-						</a>
+								<a class="btn-link"
+								   asp-controller="Posts"
+								   asp-action="Index"
+								   asp-route-id="@item.Posts.Where(p=> p.UpdatedAt == item.LastPostActivity).Select(p=> p.Game.GameId)"
+								   asp-route-dateTime="@item.Posts.Where(p=> p.UpdatedAt == item.LastPostActivity).Select(p=> p.UpdatedAt)">
+									
+
+									Voir dernière activité Post
+								</a>
 							}
 							else if (item.LastActivity == item.LastGameActivity)
 							{
-						<a class="btn-link"
-						   asp-controller="Games"
-						   asp-action="Index"
-						   asp-route-dateTime="@item.LastGameActivity">
-							Voir dernière activité Game
-						</a>
+								<a class="btn-link"
+								   asp-controller="Posts"
+								   asp-action="Index"
+								   asp-route-id="@item.Posts.Where(p=> p.UpdatedAt == item.LastGameActivity).Select(p=> p.Game.GameId)"
+								   asp-route-dateTime="@item.Posts.Where(p=> p.UpdatedAt == item.LastGameActivity).Select(p=> p.UpdatedAt)">
+									Voir dernière activité Game
+								</a>
 							}
 							else
 							{
-						<span>Aucune activité</span>
+							<span>Aucune activité</span>
 							}
 				</td>
                

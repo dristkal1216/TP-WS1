@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TP_WS1.Models;
+using TP_WS1.ViewModels;
 
 namespace TP_WS1.Controllers
 {
@@ -21,38 +22,41 @@ namespace TP_WS1.Controllers
         }
 
         // GET: Posts
-        public async Task<IActionResult> Index(int? id, DateTime? dateTime)
+        public Task<IActionResult> Index(int? id, DateTime? dateTime)
         {
+            IQueryable<Post> query = _context.Posts
+                .Include(p => p.User)
+                .Include(p => p.Game);
+
+
             if (id != null)
             {
-                var tp1Ws1JeuxVideoContext = _context.Posts.Include(p => p.Game).Include(p => p.User).Where(p => p.GameId == id);
-                return View(await tp1Ws1JeuxVideoContext.ToListAsync());
-            } else if(dateTime != null)
-            {
-                var tp1Ws1JeuxVideoContext = _context.Posts.Include(p => p.Game).Include(p => p.User).Where(p => p.UpdatedAt == dateTime);
-                return View(await tp1Ws1JeuxVideoContext.ToListAsync());
+                query = query.Where(p => p.GameId == id);
             }
-            else
+            // sinon on laisse query = tous les posts
+
+            var vm = new ViewPost
             {
-                var tp1Ws1JeuxVideoContext = _context.Posts.Include(p => p.Game).Include(p => p.User);
-                return View(await tp1Ws1JeuxVideoContext.ToListAsync());
-            }
+                ViewPosts = query
+                    .Select(p => new Post
+                    {
+                        PostId = p.PostId,
+                        Message = p.Message,
+                        CreatedAt = p.CreatedAt,
+                        UserId = p.UserId,
+                        User = p.User,
+                        GameId = p.GameId,
+                        Game = p.Game// ← on assigne la nav. property
+                    })
+                    .ToList(),
 
-
+                GameId = id ?? throw new ArgumentNullException(nameof(id))
+                
+            };
+            ViewData["HighlightDate"] = dateTime;
+            return Task.FromResult<IActionResult>(View("Index", vm));
         }
 
-
-
-
-
-        [Authorize]
-        // GET: Posts/Create
-        public IActionResult Create()
-        {
-            ViewData["GameId"] = new SelectList(_context.Games, "GameId", "GameId");
-            ViewData["UserId"] = new SelectList(_context.AspNetUsers, "UserId", "UserId");
-            return View();
-        }
 
         // POST: Posts/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -60,18 +64,73 @@ namespace TP_WS1.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PostId,Title,Message,UserId,GameId,ReactionId,IsArchived")] Post post)
+        public async Task<IActionResult> Index(
+            [Bind("GameId,Message,IsArchived")] ViewPost post)
+        {
+            // on met l’utilisateur et les dates
+            post.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            post.CreatedAt = DateTime.UtcNow;
+            post.UpdatedAt = DateTime.UtcNow;
+
+            if (!ModelState.IsValid)
+            {
+                // re-render avec erreurs
+                return View(post);
+            }
+
+            // création de l’entité et liaison à la clé étrangère GameId
+            var entity = new Post
+            {
+                GameId = post.GameId,
+                Message = post.Message,
+                UserId = post.UserId,
+                IsArchived = post.IsArchived,
+                CreatedAt = post.CreatedAt,
+                UpdatedAt = post.UpdatedAt
+            };
+
+            _context.Add(entity);
+            await _context.SaveChangesAsync();
+
+            // redirige vers la liste des posts du jeu
+            return RedirectToAction(nameof(Index), "Posts",
+                new { id = post.GameId });
+        }
+
+
+        // POST: /Posts/Update
+        // Mis à jour d’un post existant (inline edit)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Update(
+            [Bind("PostId,Message")] ViewPost post)
         {
 
-            if (ModelState.IsValid)
-            {
-                _context.Add(post);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["GameId"] = new SelectList(_context.Games, "GameId", "GameId", post.GameId);
-            ViewData["UserId"] = new SelectList(_context.AspNetUsers, "UserId", "UserId", post.UserId);
-            return View(post);
+            
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            // Récupération de l’entité existante
+            var entity = await _context.Posts.FindAsync(post.PostId);
+            if (entity == null)
+                return NotFound();
+
+            // Sécurité : on vérifie l’auteur ou le rôle Admin
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (entity.UserId != currentUserId && !User.IsInRole("Admin"))
+                return Forbid();
+
+            // Mise à jour du message et de la date
+            entity.Message = post.Message;
+            entity.UpdatedAt = DateTime.UtcNow;
+
+            _context.Update(entity);
+            await _context.SaveChangesAsync();
+
+            // Retourne vers la liste des posts pour ce jeu
+            return RedirectToAction("Index", "Posts",
+                new { id = entity.GameId });
         }
 
         public async Task<IActionResult> Edit(int? id)

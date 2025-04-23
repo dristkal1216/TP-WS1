@@ -10,6 +10,9 @@ namespace TP_WS1.ViewModels
         [Key, Column(Order = 0)]
         public string fullName { get; set; }
         public List<Game> Top3Games { get; set; }
+
+        public string GameGenreId { get; set; }
+
     }
 
 } 

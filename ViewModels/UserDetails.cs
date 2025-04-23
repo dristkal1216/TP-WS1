@@ -14,5 +14,7 @@ namespace TP_WS1.ViewModels
         public DateTime? LastPostActivity { get; set; }
         public DateTime? LastGameActivity { get; set; }
         public DateTime? LastActivity { get; set; }
+
+        public List<Post> Posts { get; set; }
     }
 }

@@ -157,12 +157,12 @@ public partial class Tp1Ws1JeuxVideoContext : DbContext
                 .HasMaxLength(50)
                 .HasColumnName("fullName");
             entity.Property(e => e.IsArchived).HasColumnName("isArchived");
-            entity.Property(e => e.Userid)
+            entity.Property(e => e.UserId)
                 .HasMaxLength(450)
-                .HasColumnName("userid");
+                .HasColumnName("UserId");
 
             entity.HasOne(d => d.User).WithMany(p => p.GameGenres)
-                .HasForeignKey(d => d.Userid)
+                .HasForeignKey(d => d.UserId)
                 .HasConstraintName("FK_GameGenre_AspNetUsers");
         });
 
@@ -181,9 +181,6 @@ public partial class Tp1Ws1JeuxVideoContext : DbContext
                 .HasMaxLength(1250)
                 .HasColumnName("message");
             entity.Property(e => e.ReactionId).HasColumnName("reaction_id");
-            entity.Property(e => e.Title)
-                .HasMaxLength(75)
-                .HasColumnName("title");
             entity.Property(e => e.UpdatedAt)
                 .HasColumnType("datetime")
                 .HasColumnName("updatedAt");

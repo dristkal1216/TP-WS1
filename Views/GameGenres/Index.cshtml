@@ -1,41 +1,64 @@
-﻿@model IEnumerable<TP_WS1.Models.GameGenre>
+﻿@model List<TP_WS1.ViewModels.GGenreGame>
 
 @{
-    ViewData["Title"] = "Index";
+	ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<div class="container py-5">
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.FullName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsArchived)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.FullName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsArchived)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.GameGenreId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.GameGenreId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.GameGenreId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+	@foreach (var genre in Model)
+	{
+		<section class="genre-section mb-5">
+
+			<div class="d-flex justify-content-between align-items-center mb-4">
+				<h2 class="genre-title text-primary fw-bold mb-0">
+					@genre.fullName
+				</h2>
+
+				@if (User.Identity.IsAuthenticated)
+				{
+					<a asp-controller="Games"
+					   asp-action="Create"
+					   asp-route-id=@genre.GameGenreId
+					class="btn btn-sm btn-outline-primary">
+						Nouveau jeu
+					</a>
+
+				}
+			</div>
+
+			<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+				@foreach (var game in genre.Top3Games)
+				{
+					<div class="col">
+						<div class="card h-100 shadow-sm">
+							<div class="card-body d-flex flex-column">
+
+								<h5 class="card-title">
+									<a asp-area=""
+									asp-controller="Posts"
+									asp-action="Index"
+									asp-route-id="@game.GameId"
+									class="text-decoration-none text-dark">
+										@game.Name
+									</a>
+								</h5>
+								@if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+								{ 
+									<a class="card-body" asp-controller="Games"
+								   asp-action="Delete"
+								   asp-route-id="@game.GameId"
+								   class="btn btn-sm btn-outline-primary">
+									Delete
+								</a>
+								}
+								
+								
+							</div>
+						</div>
+					</div>
+				}
+			</div>
+		</section>
+	}
+</div>
