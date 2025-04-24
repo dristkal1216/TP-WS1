@@ -58,43 +58,33 @@ namespace TP_WS1.Controllers
             return View(vm);
         }
 
-       
 
+
+        // GET: GameGenres/Create
         [Authorize(Roles = "Admin")]
-        [HttpGet]
-        [Authorize]
-        public IActionResult Create(string? genreId)
+        public IActionResult Create()
         {
-            // genreId vient par ex. de /Games/Create?genreId=XYZ
-            var game = new Game
-            {
-                GameGenreId = genreId,
-                IsArchived = false,
-                IsOnline = false
-            };
-            return View(game);
+            var genre = new GameGenre { IsArchived = false };
+            return View(genre);  // View ~/Views/GameGenres/Create.cshtml
         }
 
         // POST: GameGenres/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: GameGenres/Create
+        [HttpPost, ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("GameGenreId,Name,GameEngine,IsOnline,IsArchived")] Game game)
+        public async Task<IActionResult> Create([Bind("GameGenreId,FullName")] GameGenre gameGenre)
         {
-            game.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            game.CreatedAt = DateTime.UtcNow;
-            game.UpdatedAt = DateTime.UtcNow;
+            if (!ModelState.IsValid) return View(gameGenre);
 
-            if (ModelState.IsValid)
-            {
-                _context.Add(game);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index), "Games");
-            }
-            return View(game);
+            gameGenre.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            gameGenre.IsArchived = false;
+
+            _context.GameGenres.Add(gameGenre);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
+
+
 
         // GET: GameGenres/Edit/5
         [Authorize(Roles = "Admin")]

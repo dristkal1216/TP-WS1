@@ -97,41 +97,40 @@ namespace TP_WS1.Controllers
             return View(game);
         }
 
+        // GET: GameGenres/Create
         [Authorize]
-        public IActionResult Create(string? id)
+        public IActionResult Create()
         {
-            var game = new Game
-            {
-                GameGenreId = id,
-                IsArchived = false,
-                IsOnline = false
-            };
-            return View(game);
+            // Affiche une vue Create.cshtml où l'on ne demande que le FullName
+            return View();
         }
 
-
-
-        // POST: Games/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [Authorize]
+        // POST: GameGenres/Create
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("GameGenreId,Name,GameEngine,IsOnline,IsArchived")] Game game)
+        public async Task<IActionResult> Create([Bind("FullName")] GameGenre gameGenre)
         {
-            game.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            game.CreatedAt = DateTime.UtcNow;
-            game.UpdatedAt = DateTime.UtcNow;
-
             if (ModelState.IsValid)
             {
-                _context.Add(game);
+                // Génère un nouvel ID
+                gameGenre.GameGenreId = Guid.NewGuid().ToString();
+                // Associe l'utilisateur courant
+                gameGenre.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                // Définit l'état par défaut
+                gameGenre.IsArchived = false;
+
+                _context.GameGenres.Add(gameGenre);
                 await _context.SaveChangesAsync();
 
-                return RedirectToAction(nameof(Index), "GameGenres", new { id = game.GameGenreId });
+                // Redirige par exemple vers l'index des GameGenres
+                return RedirectToAction(nameof(Index));
             }
-            return View(game);
+            // En cas d'erreur de validation, on réaffiche le formulaire avec les messages
+            return View(gameGenre);
         }
+
+
 
 
         // GET: Games/Edit/5

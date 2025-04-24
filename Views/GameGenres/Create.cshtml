@@ -1,43 +1,35 @@
 ﻿@model TP_WS1.Models.GameGenre
 
 @{
-    ViewData["Title"] = "Create";
+	ViewData["Title"] = "Créer un nouveau genre de jeu";
 }
 
-<h1>Create</h1>
+<h1>@ViewData["Title"]</h1>
 
-<h4>GameGenre</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="GameGenreId" class="control-label"></label>
-                <input asp-for="GameGenreId" class="form-control" />
-                <span asp-validation-for="GameGenreId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FullName" class="control-label"></label>
-                <input asp-for="FullName" class="form-control" />
-                <span asp-validation-for="FullName" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsArchived" /> @Html.DisplayNameFor(model => model.IsArchived)
-                </label>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
+<form asp-action="Create" method="post">
+	@Html.AntiForgeryToken()
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+	<div class="form-group">
+		<label asp-for="GameGenreId" class="control-label">Identifiant du genre</label>
+		<input asp-for="GameGenreId" class="form-control" />
+		<span asp-validation-for="GameGenreId" class="text-danger"></span>
+	</div>
+
+	<div class="form-group">
+		<label asp-for="FullName" class="control-label">Nom complet</label>
+		<input asp-for="FullName" class="form-control" />
+		<span asp-validation-for="FullName" class="text-danger"></span>
+	</div>
+
+	<!-- On garde IsArchived caché mais on initialise manuellement -->
+	<input type="hidden" asp-for="IsArchived" value="false" />
+
+	<div class="form-group">
+		<button type="submit" class="btn btn-primary">Créer</button>
+		<a asp-action="Index" class="btn btn-secondary">← Retour à la liste</a>
+	</div>
+</form>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+	@{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }

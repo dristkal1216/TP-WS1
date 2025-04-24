@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TP_WS1.Models;
 
 public partial class GameGenre
 {
+    [Key,Column(Order = 0)]
     public string GameGenreId { get; set; } = null!;
 
     public string FullName { get; set; } = null!;
